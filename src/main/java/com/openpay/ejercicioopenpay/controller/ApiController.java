@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 public class ApiController {
 
@@ -44,13 +46,10 @@ public class ApiController {
 
         Object characters = restTemplate.getForObject(URL, Object.class);
 
+        setRepositoryInfo();
+
         characterList.add(characters);
-
-        ApiModel apiModel = setModelInfo();
-        apiRepository.save(apiModel);
-
-        log.info("DATE/FECHA: "+ apiModel.getDate());
-        log.info("ID LONG: "+ apiModel.getId());
+        log.info("CHARACTERS: "+ characterList.get(0));
 
         return characterList;
     }
@@ -62,12 +61,7 @@ public class ApiController {
         String URL = "http://gateway.marvel.com/v1/public/characters/"+id+"?ts="+timeStampParameter+"&apikey="+publicKey+"&hash="+privateKey;
         RestTemplate restTemplate = new RestTemplate();
         characterByID = restTemplate.getForObject(URL, Object.class);
-
-        ApiModel apiModel = setModelInfo();
-        apiRepository.save(apiModel);
-
-        log.info("DATE/FECHA: "+ apiModel.getDate());
-        log.info("ID LONG: "+ apiModel.getId());
+        setRepositoryInfo();
 
         return characterByID;
     }
@@ -80,6 +74,15 @@ public class ApiController {
         apiModel.setDate(timeStamp);
 
         return apiModel;
+    }
+
+    private void setRepositoryInfo(){
+
+        ApiModel apiModel = setModelInfo();
+        apiRepository.save(apiModel);
+
+        log.info("DATE/FECHA: "+ apiModel.getDate());
+        log.info("ID LONG: "+ apiModel.getId());
     }
 
 }
