@@ -6,7 +6,6 @@ import com.openpay.ejercicioopenpay.repository.ApiRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,15 +23,9 @@ import java.util.List;
 public class ApiController {
 
     private static final Logger log = LoggerFactory.getLogger(ApiController.class);
-
-    @Value("${public.key}")
-    private String publicKey;
-
-    @Value("${private.key}")
-    private String privateKey;
-
-    @Value("${timeStamp.parameter}")
-    private String timeStampParameter;
+    private static final String PUBLIC_KEY = "525038b6cf787bb6faf908b6c4fdd3bf";
+    private static final String PRIVATE_KEY = "69e11971d7d289422c22708fabbb8d7c";
+    private static final String TIME_STAMP = "1687730967";
 
     @Autowired
     private ApiRepository apiRepository;
@@ -40,7 +33,7 @@ public class ApiController {
     @GetMapping(value = "/characters")
     public Object getCharacters(){
 
-        String URL = "http://gateway.marvel.com/v1/public/characters?ts="+timeStampParameter+"&apikey="+publicKey+"&hash="+privateKey;
+        String URL = "http://gateway.marvel.com/v1/public/characters?ts="+TIME_STAMP+"&apikey="+PUBLIC_KEY+"&hash="+PRIVATE_KEY;
         RestTemplate restTemplate = new RestTemplate();
 
         Object characters = restTemplate.getForObject(URL, Object.class);
@@ -56,7 +49,7 @@ public class ApiController {
     public Object getCharacterById(@RequestParam String id){
 
         Object characterByID;
-        String URL = "http://gateway.marvel.com/v1/public/characters/"+id+"?ts="+timeStampParameter+"&apikey="+publicKey+"&hash="+privateKey;
+        String URL = "http://gateway.marvel.com/v1/public/characters/"+id+"?ts="+TIME_STAMP+"&apikey="+PUBLIC_KEY+"&hash="+PRIVATE_KEY;
         RestTemplate restTemplate = new RestTemplate();
         characterByID = restTemplate.getForObject(URL, Object.class);
         setRepositoryInfo();
