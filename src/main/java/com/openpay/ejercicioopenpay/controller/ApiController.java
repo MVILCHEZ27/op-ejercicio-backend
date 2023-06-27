@@ -38,9 +38,8 @@ public class ApiController {
     private ApiRepository apiRepository;
 
     @GetMapping(value = "/characters")
-    public List<Object> getCharacters(){
+    public Object getCharacters(){
 
-        List<Object> characterList = new ArrayList<>();
         String URL = "http://gateway.marvel.com/v1/public/characters?ts="+timeStampParameter+"&apikey="+publicKey+"&hash="+privateKey;
         RestTemplate restTemplate = new RestTemplate();
 
@@ -48,13 +47,12 @@ public class ApiController {
 
         setRepositoryInfo();
 
-        characterList.add(characters);
-        log.info("CHARACTERS: "+ characterList.get(0));
+        log.info("CHARACTERS: "+ characters);
 
-        return characterList;
+        return characters;
     }
 
-    @GetMapping(value = "/character/{id}")
+    @GetMapping(value = "/character", params = "id")
     public Object getCharacterById(@RequestParam String id){
 
         Object characterByID;
@@ -64,6 +62,13 @@ public class ApiController {
         setRepositoryInfo();
 
         return characterByID;
+    }
+
+    @GetMapping(value = "/bitacora")
+    public List<ApiModel> getBitacora(){
+        List<ApiModel> apiModelList = new ArrayList<>();
+        apiModelList = apiRepository.findAll();
+        return apiModelList;
     }
 
     private ApiModel setModelInfo(){
