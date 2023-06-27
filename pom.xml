@@ -43,10 +43,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>4.8.0</version>
-			<scope>test</scope>
+			<groupId>com.openpay.apis.marvel</groupId>
+			<artifactId>marvel-client</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

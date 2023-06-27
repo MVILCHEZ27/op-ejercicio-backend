@@ -1,6 +1,7 @@
 package com.openpay.ejercicioopenpay.controller;
 
 
+import com.openpay.apis.marvel.mavel.model.ApisMarvel;
 import com.openpay.ejercicioopenpay.model.ApiModel;
 import com.openpay.ejercicioopenpay.repository.ApiRepository;
 import org.slf4j.Logger;
@@ -30,8 +31,13 @@ public class ApiController {
     @Autowired
     private ApiRepository apiRepository;
 
+    @Autowired
+    private ApisMarvel apisMarvel;
+
     @GetMapping(value = "/characters")
     public Object getCharacters(){
+
+        apisMarvel.getUrlCharacters();
 
         String URL = "http://gateway.marvel.com/v1/public/characters?ts="+TIME_STAMP+"&apikey="+PUBLIC_KEY+"&hash="+PRIVATE_KEY;
         RestTemplate restTemplate = new RestTemplate();
@@ -41,6 +47,7 @@ public class ApiController {
         setRepositoryInfo();
 
         log.info("CHARACTERS: "+ characters);
+        log.info("CHARACTERS: "+ apisMarvel.getUrlCharacters());
 
         return characters;
     }
