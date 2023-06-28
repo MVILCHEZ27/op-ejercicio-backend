@@ -2,6 +2,7 @@ package com.openpay.ejercicioopenpay.controller;
 
 
 import com.openpay.apis.marvel.mavel.model.ApisMarvel;
+import com.openpay.apis.marvel.mavel.service.ApisMarvelService;
 import com.openpay.ejercicioopenpay.model.ApiModel;
 import com.openpay.ejercicioopenpay.repository.ApiRepository;
 import org.slf4j.Logger;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -34,20 +33,17 @@ public class ApiController {
     @Autowired
     private ApisMarvel apisMarvel;
 
+    @Autowired
+    private ApisMarvelService apisMarvelService;
+
     @GetMapping(value = "/characters")
     public Object getCharacters(){
 
-        apisMarvel.getUrlCharacters();
+        String url = apisMarvel.getUrlCharacters();
 
-        String URL = "http://gateway.marvel.com/v1/public/characters?ts="+TIME_STAMP+"&apikey="+PUBLIC_KEY+"&hash="+PRIVATE_KEY;
-        RestTemplate restTemplate = new RestTemplate();
-
-        Object characters = restTemplate.getForObject(URL, Object.class);
+        Object characters = apisMarvelService.getAllCharacters(url);
 
         setRepositoryInfo();
-
-        log.info("CHARACTERS: "+ characters);
-        log.info("CHARACTERS: "+ apisMarvel.getUrlCharacters());
 
         return characters;
     }
@@ -55,10 +51,10 @@ public class ApiController {
     @GetMapping(value = "/character", params = "id")
     public Object getCharacterById(@RequestParam String id){
 
-        Object characterByID;
-        String URL = "http://gateway.marvel.com/v1/public/characters/"+id+"?ts="+TIME_STAMP+"&apikey="+PUBLIC_KEY+"&hash="+PRIVATE_KEY;
-        RestTemplate restTemplate = new RestTemplate();
-        characterByID = restTemplate.getForObject(URL, Object.class);
+        String url = apisMarvel.getUrlCharacterById();
+
+        Object characterByID = apisMarvelService.getCharacterById(url, id);
+
         setRepositoryInfo();
 
         return characterByID;
