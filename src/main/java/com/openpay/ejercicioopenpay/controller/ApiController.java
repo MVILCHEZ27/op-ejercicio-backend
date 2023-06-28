@@ -62,7 +62,7 @@ public class ApiController {
 
     @GetMapping(value = "/bitacora")
     public List<ApiModel> getBitacora(){
-        List<ApiModel> apiModelList = new ArrayList<>();
+        List<ApiModel> apiModelList;
         apiModelList = apiRepository.findAll();
         return apiModelList;
     }
